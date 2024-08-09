@@ -26,6 +26,7 @@ describe('HighloadWalletV3', () => {
     beforeAll(async () => {
         keyPair = keyPairFromSeed(await getSecureRandomBytes(32));
         code    = await compile('HighloadWalletV3');
+        console.log('Code HEX', code.toBoc().toString('hex'));
 
         shouldRejectWith = async (p, code) => {
             try {
@@ -632,7 +633,7 @@ describe('HighloadWalletV3', () => {
             }
         }
 
-        const res = await highloadWalletV3.sendBatch(keyPair.secretKey, outMsgs, SUBWALLET_ID, curQuery, DEFAULT_TIMEOUT, 1000);
+        const res = await highloadWalletV3.sendBatch(keyPair.secretKey, outMsgs, SUBWALLET_ID, curQuery, DEFAULT_TIMEOUT, 0n, SendMode.CARRY_ALL_REMAINING_BALANCE, 1000);
 
         expect(res.transactions).toHaveTransaction({
             on: highloadWalletV3.address,
@@ -663,7 +664,7 @@ describe('HighloadWalletV3', () => {
             };
         }
 
-        const res = await highloadWalletV3.sendBatch(keyPair.secretKey, msgs, SUBWALLET_ID, curQuery, DEFAULT_TIMEOUT, 1000);
+        const res = await highloadWalletV3.sendBatch(keyPair.secretKey, msgs, SUBWALLET_ID, curQuery, DEFAULT_TIMEOUT, 0n, SendMode.CARRY_ALL_REMAINING_BALANCE, 1000);
 
         expect(res.transactions).toHaveTransaction({
             on: highloadWalletV3.address,

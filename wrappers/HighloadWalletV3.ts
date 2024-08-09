@@ -106,13 +106,13 @@ export class HighloadWalletV3 implements Contract {
         );
     }
 
-    async sendBatch(provider: ContractProvider, secretKey: Buffer, messages: OutActionSendMsg[], subwallet: number, query_id: HighloadQueryId, timeout: number, createdAt?: number, value: bigint = 0n) {
+    async sendBatch(provider: ContractProvider, secretKey: Buffer, messages: OutActionSendMsg[], subwallet: number, query_id: HighloadQueryId, timeout: number, value: bigint, sendMode: SendMode, createdAt?: number) {
         if (createdAt == undefined) {
-            createdAt = Math.floor(Date.now() / 1000);
+            createdAt = Math.floor(Date.now() / 1000) - 60;
         }
         return await this.sendExternalMessage(provider, secretKey, {
             message: this.packActions(messages, value, query_id),
-            mode: value > 0n ? SendMode.PAY_GAS_SEPARATELY : SendMode.CARRY_ALL_REMAINING_BALANCE,
+            mode: sendMode,
             query_id: query_id,
             createdAt: createdAt,
             subwalletId: subwallet,
